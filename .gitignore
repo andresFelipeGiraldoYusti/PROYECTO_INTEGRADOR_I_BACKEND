@@ -1,0 +1,6 @@
+env/
+
+# archivos temporales
+__pycache__/
+*.py[cod]
+*$py.class
