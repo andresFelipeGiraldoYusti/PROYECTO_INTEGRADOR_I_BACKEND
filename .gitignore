@@ -1,4 +1,4 @@
-env/
+.env
 
 # archivos temporales
 __pycache__/
