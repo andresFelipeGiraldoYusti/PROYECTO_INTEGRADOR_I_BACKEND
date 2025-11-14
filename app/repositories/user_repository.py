@@ -1,20 +1,20 @@
 from sqlalchemy.orm import Session
-from app.models.user import User
+from app.models.users import Users
 
-class UserRepository:
+class UsersRepository:
 
     @staticmethod
-    def create(db: Session, username: str, email: str, password: str) -> User:
-        db_user = User(username=username, email=email, password=password)
-        db.add(db_user)
+    def create(db: Session, Usersname: str, email: str, password: str) -> Users:
+        db_Users = Users(Usersname=Usersname, email=email, password=password)
+        db.add(db_Users)
         db.commit()
-        db.refresh(db_user)
-        return db_user
+        db.refresh(db_Users)
+        return db_Users
 
     @staticmethod
-    def get_by_id(db: Session, user_id: int) -> User:
-        return db.query(User).filter(User.id == user_id).first()
+    def get_by_id(db: Session, Users_id: int) -> Users:
+        return db.query(Users).filter(Users.id == Users_id).first()
 
     @staticmethod
-    def get_by_email(db: Session, email: str) -> User:
-        return db.query(User).filter(User.email == email).first()
+    def get_by_email(db: Session, email: str) -> Users:
+        return db.query(Users).filter(Users.email == email).first()

@@ -1,16 +1,17 @@
 from sqlalchemy.orm import Session
-from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserCreate
 from passlib.context import CryptContext
+
+from app.repositories.user_repository import UsersRepository
+from app.schemas.users_schema import UsersCreate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class UserService:
+class UsersService:
 
     @staticmethod
-    def create_user(db: Session, user: UserCreate):
+    def create_user(db: Session, user: UsersCreate):
         # Verificar si el email ya existe
-        existing_user = UserRepository.get_by_email(db, user.email)
+        existing_user = UsersRepository.get_by_email(db, user.email)
         if existing_user:
             raise ValueError("Email already registered")
 
@@ -18,8 +19,8 @@ class UserService:
         hashed_password = pwd_context.hash(user.password)
 
         # Crear usuario en la DB
-        return UserRepository.create(db, user.username, user.email, hashed_password)
+        return UsersRepository.create(db, user.username, user.email, hashed_password)
 
     @staticmethod
     def get_user(db: Session, user_id: int):
-        return UserRepository.get_by_id(db, user_id)
+        return UsersRepository.get_by_id(db, user_id)

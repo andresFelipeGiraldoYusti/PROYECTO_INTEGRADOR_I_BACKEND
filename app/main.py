@@ -4,6 +4,11 @@ from contextlib import asynccontextmanager
 from app.db.session import engine, Base
 from app.routers.api import router
 
+from app.models.users import Users
+from app.models.transactions import Transactions
+from app.models.risk_policies import RiskPolicies
+from app.models.suppliers import Suppliers
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Código de startup

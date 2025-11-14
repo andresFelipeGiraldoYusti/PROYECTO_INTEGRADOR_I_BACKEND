@@ -1,7 +1,9 @@
-fastapi==0.111.1
-uvicorn[standard]==0.23.2
-sqlalchemy==2.0.23
-pymysql==1.1.1
-python-dotenv==1.0.1
-pydantic-settings==2.11.0
-email-validator==2.1.1
+fastapi>=0.111.1
+uvicorn[standard]>=0.23.2
+sqlalchemy>=2.0.23
+pymysql>=1.1.1
+python-dotenv>=1.0.1
+pydantic-settings>=2.11.0
+email-validator>=2.1.1
+psycopg>=3.2.12
+psycopg[binary]>=3.2.12
