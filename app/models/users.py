@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from datetime import datetime
+from sqlalchemy.sql import func
 from app.db.session import Base
 
 class Users(Base):
@@ -13,5 +13,5 @@ class Users(Base):
     is_active = Column(Boolean, default=True)
     username = Column(String(50), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
-    create_at = Column(DateTime, default=datetime.now())
-    update_at = Column(DateTime, default=datetime.now())
+    create_at = Column(DateTime, default=func.now())
+    update_at = Column(DateTime, default=func.now())

@@ -6,7 +6,7 @@ class UsersCreate(BaseModel):
     dapartment: str
     phone_number: str
     username: str
-    password: str
+    password_hash: str
 
 class UsersRead(BaseModel):
     id: int

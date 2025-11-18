@@ -8,6 +8,9 @@ from app.models.users import Users
 from app.models.transactions import Transactions
 from app.models.risk_policies import RiskPolicies
 from app.models.suppliers import Suppliers
+from app.models.mfa_devices import MFADevices
+from app.models.totp_configurations import TOTPConfigurations
+from app.models.mfa_session import MFASession
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
