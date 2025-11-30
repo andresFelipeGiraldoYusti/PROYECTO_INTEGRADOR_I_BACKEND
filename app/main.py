@@ -1,16 +1,15 @@
 # app/main.py
 from fastapi import FastAPI
+import uvicorn
 from contextlib import asynccontextmanager
 from app.db.session import engine, Base
 from app.routers.api import router
 
 from app.models.users import Users
-from app.models.transactions import Transactions
 from app.models.risk_policies import RiskPolicies
 from app.models.suppliers import Suppliers
-from app.models.mfa_devices import MFADevices
 from app.models.totp_configurations import TOTPConfigurations
-from app.models.mfa_session import MFASession
+from app.models.transactions import Transactions
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -35,5 +34,4 @@ Base.metadata.create_all(bind=engine)
 
 # Arranque con Uvicorn (solo si ejecutas directamente este archivo)
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

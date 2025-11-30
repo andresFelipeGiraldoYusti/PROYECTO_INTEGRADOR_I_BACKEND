@@ -20,9 +20,13 @@ class Settings(BaseSettings):
     DB_NAME: str = os.getenv("POSTGRES_DB", "postgres")
     
     # --- Configuración de JWT (sin cambios) ---
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "mysecretkey")
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
+    SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "fallback_secret_key")
+    ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", 30))
+    REFRESH_TOKEN_EXPIRE_DAYS: int = int(os.getenv("JWT_REFRESH_TOKEN_EXPIRE_DAYS", 7))
+    APP_NAME: str = os.getenv("APP_NAME", "MiApp")
+    APP_DOMAIN: str = os.getenv("APP_DOMAIN", "https://miapp.com")
+    API_DOMAIN: str = os.getenv("API_DOMAIN", "https://api.miapp.com")
 
     @property
     def SQLALCHEMY_DATABASE_URL(self) -> str:
@@ -31,8 +35,7 @@ class Settings(BaseSettings):
         
         # PostgreSQL generalmente requiere contraseña
         return (
-            f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASSWORD}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@"
+            f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
-
 settings = Settings()

@@ -15,6 +15,7 @@ class UsersService:
         if existing_user:
             raise ValueError("Email already registered")
 
+        print(user.password_hash)
         user.password_hash = hash_password(user.password_hash)
 
         return UsersRepository.create(db, user)
