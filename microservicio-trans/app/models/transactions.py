@@ -29,7 +29,6 @@ class Transactions(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     # antes: product_type = Column(String(50), nullable=False)
-    product_type = Column(String(50), nullable=False)  # puedes dejarlo por compatibilidad
     product_type_id = Column(Integer, ForeignKey("product_types.id"), nullable=True)
 
     amount = Column(Integer, nullable=False)

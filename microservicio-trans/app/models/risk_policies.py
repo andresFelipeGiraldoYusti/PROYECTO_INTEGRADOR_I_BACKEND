@@ -1,3 +1,5 @@
+#TODO: Agregar Rol
+#Cantidad, Rol, Tipo producto, Proveedor, accion
 # app/models/risk_policy.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime

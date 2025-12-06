@@ -1,3 +1,4 @@
+#/models/totp_configurations.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime
 from db.session import Base

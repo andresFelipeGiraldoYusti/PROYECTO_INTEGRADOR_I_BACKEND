@@ -35,8 +35,9 @@ class Settings(BaseSettings):
         
         # PostgreSQL generalmente requiere contraseña
         return (
-            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASSWORD}"
+            f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}"
             #f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}"
-            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            #f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+            f"@{self.DB_HOST}/{self.DB_NAME}?sslmode=require&channel_binding=require"
         )
 settings = Settings()

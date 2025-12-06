@@ -1,3 +1,4 @@
+#/models/mfa_devices.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime
 from db.session import Base

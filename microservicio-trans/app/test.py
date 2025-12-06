@@ -5,8 +5,9 @@ from sqlalchemy import text
 
 def test_connection():
     print(">>> Probando conexión a la base de datos...")
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     print(">>> SQLALCHEMY_DATABASE_URL =", settings.SQLALCHEMY_DATABASE_URL)
-
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     # 1) Probar conexión directa con el engine
     try:
         with engine.connect() as connection:
