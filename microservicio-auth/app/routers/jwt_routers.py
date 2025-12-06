@@ -8,14 +8,13 @@ router = APIRouter()
 router = APIRouter(prefix="/jwt", tags=["JWT"])
 
 @router.post("/generar_token")
-def generar_token(user_id: int, username: str, db: Session = Depends(get_db)):
+def generar_token(user_id: int, db: Session = Depends(get_db)):
     try:
-        token = create_jwt_token(user_id=user_id, username=username)
+        token = create_jwt_token(user_id=user_id)
         return {
             "access_token": token,
             "token_type": "bearer",
-            "user_id": user_id,
-            "username": username
+            "user_id": user_id
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al generar token: {str(e)}")
@@ -28,7 +27,6 @@ def verificar_token(token: str, db: Session = Depends(get_db)):
         return {
             "valido": True,
             "user_id": payload["sub"],
-            "username": payload["username"],
             "expiracion": payload["exp"]
         }
     except HTTPException as e:

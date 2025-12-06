@@ -23,8 +23,8 @@ def read_user(user_id: int, db: Session = Depends(get_db)) -> UsersRead:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@router.get("/autentucar/{username}/{password}", response_model=UsersRead)
-def authenticate_user(username: str, password: str, db: Session = Depends(get_db)) -> UsersRead:
+@router.get("/autentucar/{username}/{password}")
+def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
     db_user = authenticate(db, username, password)
     if not db_user:
         raise HTTPException(status_code=401, detail="Invalid username or password")

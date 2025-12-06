@@ -2,13 +2,12 @@ from datetime import datetime, timedelta, timezone
 from app.core.config import settings
 import jwt
 
-def create_jwt_token(user_id: int, username: str) -> str:
+def create_jwt_token(user_id: int) -> str:
     now = datetime.now(timezone.utc)
     expiration = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     payload = {
         "sub": str(user_id),
-        "username": username,
         "exp": expiration,
         "iat": now
     }
