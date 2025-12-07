@@ -12,7 +12,15 @@ class UsersRead(BaseModel):
     email: EmailStr
     full_name: str
     rol: str
+    phone_number: str
 
     class Config:
         from_attributes = True
         orm_mode = True
+        
+class UsersUpdate(BaseModel):
+    email: EmailStr
+    full_name: str
+    rol: str
+    phone_number: str
+    password_hash: str

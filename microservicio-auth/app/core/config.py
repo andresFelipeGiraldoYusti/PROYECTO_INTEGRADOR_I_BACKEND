@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     DB_PORT: int = int(os.getenv("POSTGRES_PORT", 5432))
     DB_NAME: str = os.getenv("POSTGRES_DB", "postgres")
     
+    NAME_PROJECT: str = os.getenv("NAME_PROJECT", "MiProyecto")
+    
     # --- Configuración de JWT (sin cambios) ---
     SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "fallback_secret_key")
     ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")

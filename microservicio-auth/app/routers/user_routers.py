@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 
 from app.auth.dependencies import require_admin
-from app.schemas.users_schema import UsersRead
+from app.schemas.users_schema import UsersRead, UsersUpdate
 from app.services.user_service import UsersService
 from app.auth.login import authenticate
 
@@ -25,11 +25,12 @@ def create_user(db: Session = Depends(get_db), admin_user = Depends(require_admi
         raise HTTPException(status_code=400, detail=str(e))
     
 @router.put("/update_user")
-def update_user(user: UsersRead,
+def update_user(user: UsersUpdate,
                 db: Session = Depends(get_db),
                 admin_user = Depends(require_admin)
                 ):
     try:
+        print(user)
         db_user = UsersService.update_user(db, user)
         return db_user
     except ValueError as e:
