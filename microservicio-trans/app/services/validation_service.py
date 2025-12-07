@@ -31,9 +31,6 @@ def validate_purchase_order(db: Session, tx: Transactions) -> Tuple[List[str], L
     if not supplier.comercial_name:
         errores.append("Nombre comercial del proveedor vacío")
 
-    # 👇 Antes aquí validabas supplier.risk_category, pero ese campo ya no existe.
-    #    Si en el futuro vuelves a tener una categoría de riesgo, se podría validar de nuevo.
-
     # Validación contra RUES u otra fuente externa
     status = rues_validation.get_rues_status(supplier.nit)
     if status == "INACTIVO":
