@@ -6,10 +6,7 @@ from app.db.session import engine, Base
 from app.routers.api import router
 
 from app.models.users import Users
-from app.models.risk_policies import RiskPolicies
-from app.models.suppliers import Suppliers
-from app.models.totp_configurations import TOTPConfigurations
-from app.models.transactions import Transactions
+from app.models.totp import TOTP
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

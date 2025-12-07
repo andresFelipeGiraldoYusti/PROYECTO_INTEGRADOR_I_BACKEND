@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime
 from app.db.session import Base
 
-class TOTPConfigurations(Base):
+class TOTP(Base):
     __tablename__ = "totp_configurations"
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)

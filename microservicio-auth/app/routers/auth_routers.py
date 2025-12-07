@@ -1,50 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header, status
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.db.session import get_db
-import pyotp
-import time
 
-from app.security.hash_manager import hash_password, verify_password
-from app.security.totp_manager import generate_totp_secret, verify_totp_secret, generate_totp_qr_uri
-
-from app.services.suppliers_service import SuppliersService
-from app.schemas.suppliers_schema import SupplierCreate
+from app.schemas.users_schema import UsersCreate
+from app.services.user_service import UsersService
+from app.auth.login import authenticate
+from app.auth.dependencies import require_admin
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/generar_contraseña_hash")
-def hash(password: str, db: Session = Depends(get_db)):
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    email = form_data.username
+    password = form_data.password
     try:
-        return hash_password(password)
+        token = authenticate(db, email, password)
+        if not token:
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+
+        return {
+            "access_token": token,
+            "token_type": "bearer"
+        }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
-@router.post("/verificar_hash")
-def verify(password: str, hash: str, db: Session = Depends(get_db)):
+
+@router.post("/register")
+def register_user(user: UsersCreate, 
+                  db: Session = Depends(get_db),
+                  admin_user = Depends(require_admin)
+                  ):
     try:
-        is_valid = verify_password(password, hash)
-        return {"is_valid": is_valid}
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-@router.get("/generate_totp_secret")
-def generate_totp():
-    try:
-        return generate_totp_secret()
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-@router.get("/generate_totp_qr_uri")
-def generate_totp_qr(username: str, issuer_name: str, db: Session = Depends(get_db)):
-    try:
-        return generate_totp_qr_uri(username, issuer_name)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-@router.post("/verify_totp")
-def verify_totp(token: str, secret: str,  db: Session = Depends(get_db)):
-    try:
-        print(token, secret)
-        return verify_totp_secret(token, secret)
+        db_user = UsersService.create_user(db, user)
+        return db_user
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

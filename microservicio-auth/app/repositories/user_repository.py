@@ -22,5 +22,13 @@ class UsersRepository:
         return db.query(Users).filter(Users.email == email).first()
     
     @staticmethod
-    def get_by_username(db: Session, username: str) -> Users:
-        return db.query(Users).filter(Users.username == username).first()
+    def get_all(db: Session) -> list[Users]:
+        return db.query(Users).all()
+    
+    @staticmethod
+    def update_user(db: Session, user: Users) -> Users:
+        print(user)
+        db.merge(user)
+        db.commit()
+        db.refresh(user)
+        return user

@@ -3,7 +3,7 @@ from app.security.hash_manager import verify_password
 from app.security.jwt_manager import create_jwt_token
 
 def authenticate(db, username: str, password: str):
-    user = UsersRepository.get_by_username(db, username)
+    user = UsersRepository.get_by_email(db, username)
     print(f"Authenticating user: {user.id}")
     if not user:
         return None

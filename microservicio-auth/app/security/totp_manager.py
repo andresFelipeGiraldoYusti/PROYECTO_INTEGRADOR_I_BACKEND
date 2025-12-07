@@ -22,7 +22,7 @@ def generate_totp_qr_uri(username: str, issuer_name: str) -> str:
     img_str = base64.b64encode(buffer.getvalue()).decode()
     
     return {
-        'secret': '',
+        'secret': secret,
         'uri': uri,
         'qr_code': f"data:image/png;base64,{img_str}"
     }
