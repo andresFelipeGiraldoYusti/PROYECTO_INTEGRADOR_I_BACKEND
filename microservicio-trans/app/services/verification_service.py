@@ -50,40 +50,52 @@ def create_and_verify_transaction(db: Session, data: TransactionVerificationRequ
     errores_totales: List[str] = []
     alertas_totales: List[str] = []
 
+    # 1) Validaciones de consistencia entre payload y BD
     errores_payload, alertas_payload = validate_supplier_payload_against_db(db, data)
     errores_totales.extend(errores_payload)
     alertas_totales.extend(alertas_payload)
 
+    # 2) Validaciones de la orden de compra / proveedor / RUES
     errores_orden, alertas_orden = validate_purchase_order(db, tx)
     errores_totales.extend(errores_orden)
     alertas_totales.extend(alertas_orden)
 
-    detalles = errores_totales + alertas_totales
-
+    # 3) Si hay errores duros, se marca como fallida
     if errores_totales:
         tx.verification_status = VerificationStatus.FAILED
         tx.mfa_status = MFAStatus.NOT_REQUIRED
 
     else:
-        # 👇 Aquí usamos la configuración de BD para ver si este usuario puede saltarse las reglas
+        # 4) Ver si el usuario tiene permiso para saltarse políticas de riesgo
         if user_has_risk_override(db, user):
             tx.verification_status = VerificationStatus.SUCCESS
             tx.mfa_status = MFAStatus.NOT_REQUIRED
         else:
+            # 5) Motor de riesgo decide si requiere MFA
             requiere_mfa = should_require_mfa(db, tx)
 
             if requiere_mfa:
                 tx.verification_status = VerificationStatus.NEEDS_ADDITIONAL_CHECKS
                 tx.mfa_status = MFAStatus.PENDING
+
+                # 👉 Mensaje explicando por qué está en "NEEDS_ADDITIONAL_CHECKS"
+                alertas_totales.append(
+                    "La transacción requiere verificación MFA del usuario según las políticas de riesgo configuradas."
+                )
+
                 send_mfa_challenge(db, tx)
             else:
                 tx.verification_status = VerificationStatus.SUCCESS
                 tx.mfa_status = MFAStatus.NOT_REQUIRED
 
+    # 6) Construir detalle final (errores + alertas) y guardar en la transacción
+    detalles = errores_totales + alertas_totales
     tx.verification_details = "\n".join(detalles) if detalles else None
+
     db.commit()
     db.refresh(tx)
 
+    # 7) Texto legible para el estado
     if tx.verification_status == VerificationStatus.FAILED:
         estado = "verificación fallida"
     elif tx.mfa_status == MFAStatus.PENDING:
@@ -92,3 +104,4 @@ def create_and_verify_transaction(db: Session, data: TransactionVerificationRequ
         estado = "verificación exitosa"
 
     return tx, estado, detalles
+

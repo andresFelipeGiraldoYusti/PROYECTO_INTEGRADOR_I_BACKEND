@@ -2,10 +2,10 @@
 from typing import List, Tuple
 from sqlalchemy.orm import Session
 
-from app.models.transaction import Transactions
-from app.models.supplier import Suppliers
-from app.schemas.verification import TransactionVerificationRequest
-from app.services.external import rues_validation
+from models.transactions import Transactions
+from models.suppliers import Suppliers
+from schemas.verification_schema import TransactionVerificationRequest
+from services.external import rues_validation
 
 
 def validate_purchase_order(db: Session, tx: Transactions) -> Tuple[List[str], List[str]]:
