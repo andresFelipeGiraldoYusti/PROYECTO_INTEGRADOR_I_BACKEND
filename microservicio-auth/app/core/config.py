@@ -1,7 +1,3 @@
-# Antes
-# from pydantic import BaseSettings
-
-# Ahora
 from pydantic_settings import BaseSettings
 import os
 from dotenv import load_dotenv
@@ -13,11 +9,11 @@ from pydantic_settings import BaseSettings # Asumiendo que usas pydantic-setting
 
 class Settings(BaseSettings):
     # --- Configuración de PostgreSQL ---
-    DB_USER: str = os.getenv("POSTGRES_USER", "postgres")
-    DB_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "root")
-    DB_HOST: str = os.getenv("POSTGRES_HOST", "localhost")
-    DB_PORT: int = int(os.getenv("POSTGRES_PORT", 5432))
-    DB_NAME: str = os.getenv("POSTGRES_DB", "postgres")
+    DB_USER: str = "auth"
+    DB_PASSWORD: str = "admin"
+    DB_HOST: str = "db_auth"   # nombre del servicio en docker-compose
+    DB_PORT: int = 5432
+    DB_NAME: str = "db_auth"
     
     NAME_PROJECT: str = os.getenv("NAME_PROJECT", "MiProyecto")
     
@@ -37,7 +33,7 @@ class Settings(BaseSettings):
         
         # PostgreSQL generalmente requiere contraseña
         return (
-            f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}@"
+            f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@"
             f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 settings = Settings()
