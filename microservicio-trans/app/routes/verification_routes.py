@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from db.session import get_db
-from schemas.verification import VerificationResponse
+from schemas.verification_schema import VerificationResponse
 from controllers.verification_controller import verify_transaction_controller
-from schemas.verification import TransactionVerificationRequest
+from schemas.verification_schema import TransactionVerificationRequest
 
 router = APIRouter()
 

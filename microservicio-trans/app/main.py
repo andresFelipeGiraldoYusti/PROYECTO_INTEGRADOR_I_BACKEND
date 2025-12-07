@@ -11,11 +11,13 @@ import models  # noqa: F401  # Fuerza la carga de app/models/__init__.py
 app = FastAPI(title="Transaction Verification Service")
 
 # 👉 Verificar/crear tablas al iniciar la app
+"""
 @app.on_event("startup")
 def on_startup():
     print(">>> Verificando/creando tablas en la base de datos...")
     Base.metadata.create_all(bind=engine)
     print(">>> Tablas listas.")
+"""
 
 app.include_router(
     verification_router,
