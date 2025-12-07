@@ -1,0 +1,9 @@
+_format_version: "3.0"
+
+services:
+  - name: auth-service
+    url: http://host.docker.internal:8001
+    routes:
+      - name: auth-routes
+        paths:
+          - /auth
