@@ -9,6 +9,5 @@ class ProductTypes(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(100), unique=True, nullable=False)
     description = Column(String(255))
-    risk_category = Column(String(20), default="MEDIUM")  # LOW, MEDIUM, HIGH
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now)

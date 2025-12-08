@@ -2,64 +2,57 @@
 from sqlalchemy.orm import Session
 from models.transactions import Transactions
 from models.risk_policies import RiskPolicies
-from models.suppliers import Suppliers
+from models.suppliers import Suppliers  # por si luego quieres usar más criterios
+
 
 def get_applicable_policy(db: Session, tx: Transactions) -> RiskPolicies | None:
-    # Trae todas las políticas activas para ese proveedor + tipo de producto
+    """
+    Busca las políticas activas que aplican para:
+      - ese proveedor
+      - ese tipo de producto
+    y se queda con la política cuyo 'amount' sea el mayor umbral
+    que no supera el monto de la transacción.
+    """
+
     policies = (
         db.query(RiskPolicies)
         .filter(
             RiskPolicies.is_active == True,
             RiskPolicies.supplier_id == tx.supplier_id,
-            RiskPolicies.product_type == tx.product_type,
+            RiskPolicies.product_type_id == tx.product_type_id,
         )
-        .order_by(RiskPolicies.amount.asc())  # ordena por umbral
+        .order_by(RiskPolicies.amount.asc())
         .all()
     )
 
     applicable = None
     for p in policies:
-        # usamos la política cuyo amount sea <= monto de la transacción
         if tx.amount >= p.amount:
-            applicable = p
+            applicable = p  # siempre termina con la de mayor amount <= tx.amount
 
     return applicable
 
 
 def should_require_mfa(db: Session, tx: Transactions) -> bool:
-    # 1) Primero: políticas configuradas por el admin
+    # 1) Intentar aplicar políticas de riesgo configuradas por el admin
     policy = get_applicable_policy(db, tx)
 
     if policy:
         action = (policy.mfa_action or "").upper()
 
         if action == "ALWAYS_MFA":
-            return True
-        if action == "NEVER_MFA":
-            return False
+            return True          # siempre MFA
         if action == "REQUIRE_MFA":
-            return True
+            return True          # requiere MFA a partir de ese umbral
+        if action == "NEVER_MFA":
+            return False         # nunca MFA (por ejemplo, proveedores ultra confiables)
         if action == "SKIP_MFA":
-            return False
+            return False         # se omite MFA en ese rango
 
         # Acción desconocida → default seguro
         return True
 
-    # 2) Si NO hay política en BD, decides una regla simple sin montos
-
-    supplier = db.query(Suppliers).filter(Suppliers.id == tx.supplier_id).first()
-    if not supplier:
-        # Sin información del proveedor → MFA por seguridad
-        return True
-
-    cat = (supplier.risk_category or "MEDIUM").upper()
-
-    # Aquí ya NO usamos montos, solo categoría.
-    # Ejemplo de regla:
-    if cat == "HIGH":
-        return True          # siempre MFA para proveedores de alto riesgo
-    if cat in ("MEDIUM", "LOW"):
-        return False         # si no hay política, no pedimos MFA por monto
-
-    # Fallback muy básico
-    return True
+    # 2) Si NO hay política configurada para ese proveedor + producto
+    #    decides un criterio por defecto.
+    #    Puedes ser estricto (True) o laxo (False).
+    return True  # por seguridad, si no hay reglas, pedimos MFA

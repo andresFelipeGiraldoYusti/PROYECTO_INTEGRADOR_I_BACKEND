@@ -1,3 +1,4 @@
+
 # app/models/__init__.py
 
 # Importa Base

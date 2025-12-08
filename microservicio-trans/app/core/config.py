@@ -1,7 +1,4 @@
-# Antes
-# from pydantic import BaseSettings
-
-# Ahora
+# core/config.py
 from pydantic_settings import BaseSettings
 import os
 from dotenv import load_dotenv

@@ -1,5 +1,5 @@
 #/models/users.py
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from db.session import Base
 
@@ -14,5 +14,6 @@ class Users(Base):
     is_active = Column(Boolean, default=True)
     username = Column(String(50), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
+    role_id = Column(Integer, ForeignKey("roles.id"), nullable=False) 
     create_at = Column(DateTime, default=func.now())
     update_at = Column(DateTime, default=func.now())

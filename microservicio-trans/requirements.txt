@@ -1,0 +1,13 @@
+fastapi>=0.111.1
+uvicorn[standard]>=0.23.2
+sqlalchemy>=2.0.23
+python-dotenv>=1.0.1
+pydantic-settings>=2.11.0
+email-validator>=2.1.1
+psycopg>=3.2.12
+psycopg[binary]>=3.2.12
+pyotp>=2.8.0
+qrcode>=7.4.2
+passlib[argon2]
+pillow
+PyJWT

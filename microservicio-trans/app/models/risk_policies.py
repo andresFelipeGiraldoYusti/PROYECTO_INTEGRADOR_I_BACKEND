@@ -9,13 +9,14 @@ class RiskPolicies(Base):
     __tablename__ = "risk_policies"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    policy_name = Column(String(100), nullable=False, unique=True)
-    description = Column(String(500))
-
+    #policy_name = Column(String(100), nullable=False, unique=True)
+    #description = Column(String(500))
+    rol= Column(String(50), nullable=False)  # rol del usuario
     amount = Column(Integer, nullable=False)  # umbral de monto
 
     # Por ahora string; después puedes migrar a FK product_type_id
-    product_type = Column(String(50), nullable=False)
+    product_type_id = Column(Integer, ForeignKey("product_types.id"))
+
 
     supplier_id = Column(Integer, ForeignKey("suppliers.id"), nullable=False)
 
