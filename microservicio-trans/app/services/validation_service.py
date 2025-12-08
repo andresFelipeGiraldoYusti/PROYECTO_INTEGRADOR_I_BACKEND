@@ -33,8 +33,11 @@ def validate_purchase_order(db: Session, tx: Transactions) -> Tuple[List[str], L
 
     # Validación contra RUES u otra fuente externa
     status = rues_validation.get_rues_status(supplier.nit)
-    if status == False:
-        errores.append("Cámara de comercio del proveedor aparece inactiva")
+    if status[0] == "NO EXISTE":
+        errores.append("Proveedor no encontrado en RUES")
+    else:
+        if status[1] == False:
+            errores.append("Cámara de comercio del proveedor aparece inactiva")
 
     return errores, alertas
 
