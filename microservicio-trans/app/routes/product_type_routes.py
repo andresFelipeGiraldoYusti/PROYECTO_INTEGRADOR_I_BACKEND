@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from db.session import get_db
-from schemas.product_type_schema import ProductTypeCreate, ProductTypeResponse
-from services.product_type_service import (
+from app.db.session import get_db
+from app.schemas.product_type_schema import ProductTypeCreate, ProductTypeResponse
+from app.services.product_type_service import (
     create_product_type,
     search_product_types,
     get_product_type,

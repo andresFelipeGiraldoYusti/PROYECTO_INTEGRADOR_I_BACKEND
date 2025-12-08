@@ -5,7 +5,7 @@ from sqlalchemy import (
 from datetime import datetime
 from sqlalchemy.sql import func
 import enum
-from db.session import Base
+from app.db.session import Base
 
 
 class VerificationStatus(str, enum.Enum):
@@ -26,7 +26,7 @@ class Transactions(Base):
     __tablename__ = "transactions"
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, nullable=False)
     
     # antes: product_type = Column(String(50), nullable=False)
     product_type_id = Column(Integer, ForeignKey("product_types.id"), nullable=True)

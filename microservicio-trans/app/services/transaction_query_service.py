@@ -1,10 +1,11 @@
+# app/services/transaction_query_service.py
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
+from sqlalchemy import or_
 
-from models.transactions import Transactions
-from models.users import Users
-from models.suppliers import Suppliers
-from models.product_type import ProductTypes
+from app.models.transactions import Transactions
+from app.models.suppliers import Suppliers
+from app.models.product_type import ProductTypes
+from app.services.external_user_service import get_user_by_id
 
 
 def search_transactions(
@@ -16,18 +17,15 @@ def search_transactions(
     amount_min: int | None = None,
     amount_max: int | None = None,
 ):
+    """
+    Ahora los datos del usuario no vienen de la tabla `users`,
+    sino del servicio externo (mock user_data()).
+    """
     q = (
-        db.query(Transactions, Users, Suppliers, ProductTypes)
-        .join(Users, Transactions.user_id == Users.id)
+        db.query(Transactions, Suppliers, ProductTypes)
         .join(Suppliers, Transactions.supplier_id == Suppliers.id)
         .join(ProductTypes, Transactions.product_type_id == ProductTypes.id, isouter=True)
     )
-
-    if user_name:
-        q = q.filter(Users.full_name.ilike(f"%{user_name}%"))
-
-    if username:
-        q = q.filter(Users.username == username)
 
     if supplier_name:
         q = q.filter(
@@ -46,12 +44,33 @@ def search_transactions(
     if amount_max is not None:
         q = q.filter(Transactions.amount <= amount_max)
 
+    # Traemos primero todas las filas que dependen solo de BD
+    rows = q.all()
+
     results = []
-    for tx, user, supplier, pt in q.all():
+
+    for tx, supplier, pt in rows:
+        user = get_user_by_id(tx.user_id)
+
+        # Filtros por usuario (se aplican en memoria porque vienen de servicio externo)
+        if username:
+            if not user or user.get("username") != username:
+                continue
+
+        if user_name:
+            if not user or user_name.lower() not in user.get("full_name", "").lower():
+                continue
+
+        # Nombre del usuario para la respuesta
+        if user:
+            user_full_name = user.get("full_name", "Usuario sin nombre")
+        else:
+            user_full_name = "Usuario no encontrado"
+
         results.append(
             {
                 "id": tx.id,
-                "user_name": user.full_name,
+                "user_name": user_full_name,
                 "supplier_name": supplier.comercial_name or supplier.legal_name,
                 "product_type_name": pt.name if pt else None,
                 "amount": tx.amount,

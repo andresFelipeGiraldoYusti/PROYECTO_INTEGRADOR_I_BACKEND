@@ -10,11 +10,11 @@ from pydantic_settings import BaseSettings # Asumiendo que usas pydantic-setting
 
 class Settings(BaseSettings):
     # --- Configuración de PostgreSQL ---
-    DB_USER: str = os.getenv("POSTGRES_USER", "postgres")
-    DB_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "root")
-    DB_HOST: str = os.getenv("POSTGRES_HOST", "localhost")
-    DB_PORT: int = int(os.getenv("POSTGRES_PORT", 5432))
-    DB_NAME: str = os.getenv("POSTGRES_DB", "postgres")
+    DB_USER: str = "trans"
+    DB_PASSWORD: str = "admin"
+    DB_HOST: str = "db_trans"   # nombre del servicio en docker-compose
+    DB_PORT: int = 5432
+    DB_NAME: str = "db_trans"
     
     # --- Configuración de JWT (sin cambios) ---
     SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "fallback_secret_key")
@@ -32,9 +32,7 @@ class Settings(BaseSettings):
         
         # PostgreSQL generalmente requiere contraseña
         return (
-            f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}"
-            #f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}"
-            #f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-            f"@{self.DB_HOST}/{self.DB_NAME}?sslmode=require&channel_binding=require"
+            f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@"
+            f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 settings = Settings()

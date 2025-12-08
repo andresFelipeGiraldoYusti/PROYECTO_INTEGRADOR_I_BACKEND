@@ -18,21 +18,21 @@ services:
     volumes:
       - db_auth_data:/var/lib/postgresql/data
 
-  # # ------------------------
-  # # BASE DATOS MC2
-  # # ------------------------
-  # db_mc2:
-  #   image: postgres:15
-  #   container_name: db_mc2
-  #   restart: always
-  #   environment:
-  #     POSTGRES_DB: mc2_db
-  #     POSTGRES_USER: mc2_user
-  #     POSTGRES_PASSWORD: mc2_pass
-  #   ports:
-  #     - "5434:5432"
-  #   volumes:
-  #     - db_mc2_data:/var/lib/postgresql/data
+  # ------------------------
+  # BASE DATOS MC2
+  # ------------------------
+  db_trans:
+    image: postgres:15
+    container_name: db_trans
+    restart: always
+    environment:
+      POSTGRES_DB: db_trans
+      POSTGRES_USER: trans
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_trans_data:/var/lib/postgresql/data
 
 
   # ------------------------
@@ -53,16 +53,16 @@ services:
   # # ------------------------
   # # MICROSERVICIO 2
   # # ------------------------
-  # mc2:
-  #   build: ./mc2
-  #   container_name: mc2
-  #   restart: always
-  #   env_file:
-  #     - ./mc2/.env
-  #   depends_on:
-  #     - db_mc2
-  #   ports:
-  #     - "8002:8000"
+  microservicio-trans:
+    build: ./microservicio-trans
+    container_name: microservicio-trans
+    restart: always
+    env_file:
+      - ./microservicio-trans/.env
+    depends_on:
+      - db_trans
+    ports:
+      - "8003:8003"
 
 
   # # ------------------------
@@ -88,4 +88,4 @@ services:
 
 volumes:
   db_auth_data:
-  #db_mc2_data:
+  db_trans_data:

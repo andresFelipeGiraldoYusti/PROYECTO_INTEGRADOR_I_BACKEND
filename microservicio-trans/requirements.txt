@@ -11,3 +11,5 @@ qrcode>=7.4.2
 passlib[argon2]
 pillow
 PyJWT
+psycopg2-binary
+argon2-cffi

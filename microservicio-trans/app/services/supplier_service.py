@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.suppliers import Suppliers
-from schemas.supplier_schema import SupplierCreate
+from app.models.suppliers import Suppliers
+from app.schemas.supplier_schema import SupplierCreate
 
 
 def create_supplier(db: Session, data: SupplierCreate) -> Suppliers:

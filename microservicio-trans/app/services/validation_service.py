@@ -2,10 +2,10 @@
 from typing import List, Tuple
 from sqlalchemy.orm import Session
 
-from models.transactions import Transactions
-from models.suppliers import Suppliers
-from schemas.verification_schema import TransactionVerificationRequest
-from services.external import rues_validation
+from app.models.transactions import Transactions
+from app.models.suppliers import Suppliers
+from app.schemas.verification_schema import TransactionVerificationRequest
+from app.services.external import rues_validation
 
 
 def validate_purchase_order(db: Session, tx: Transactions) -> Tuple[List[str], List[str]]:
@@ -33,7 +33,7 @@ def validate_purchase_order(db: Session, tx: Transactions) -> Tuple[List[str], L
 
     # Validación contra RUES u otra fuente externa
     status = rues_validation.get_rues_status(supplier.nit)
-    if status == "INACTIVO":
+    if status == False:
         errores.append("Cámara de comercio del proveedor aparece inactiva")
 
     return errores, alertas

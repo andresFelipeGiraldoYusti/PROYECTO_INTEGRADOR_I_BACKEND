@@ -1,7 +1,7 @@
 # app/controllers/verification_controller.py
 from sqlalchemy.orm import Session
-from schemas.verification_schema import TransactionVerificationRequest, VerificationResponse
-from services.verification_service import create_and_verify_transaction
+from app.schemas.verification_schema import TransactionVerificationRequest, VerificationResponse
+from app.services.verification_service import create_and_verify_transaction
 
 def verify_transaction_controller(
     data: TransactionVerificationRequest,

@@ -1,7 +1,7 @@
 # app/models/product_type.py
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
-from db.session import Base
+from app.db.session import Base
 
 class ProductTypes(Base):
     __tablename__ = "product_types"

@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
-from models.risk_policies import RiskPolicies
-from models.suppliers import Suppliers
-from models.product_type import ProductTypes
-from schemas.risk_policy_schema import RiskPolicyCreate
+from app.models.risk_policies import RiskPolicies
+from app.models.suppliers import Suppliers
+from app.models.product_type import ProductTypes
+from app.schemas.risk_policy_schema import RiskPolicyCreate
 
 
 def create_risk_policy(db: Session, data: RiskPolicyCreate) -> RiskPolicies:

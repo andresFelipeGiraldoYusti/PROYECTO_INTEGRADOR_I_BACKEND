@@ -1,42 +1,133 @@
-from core.config import settings
-from db.session import engine, SessionLocal
-from sqlalchemy import text
-
-
-def test_connection():
-    print(">>> Probando conexión a la base de datos...")
-    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-    print(">>> SQLALCHEMY_DATABASE_URL =", settings.SQLALCHEMY_DATABASE_URL)
-    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-    # 1) Probar conexión directa con el engine
-    try:
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT 1"))
-            row = result.fetchone()
-            print(">>> Resultado SELECT 1:", row[0])
-    except Exception as e:
-        print("❌ Error al conectar usando engine.connect():")
-        print(repr(e))
-        return
-
-    # 2) Probar creación de sesión
-    try:
-        db = SessionLocal()
-        result = db.execute(text("SELECT 1"))
-        row = result.fetchone()
-        print(">>> Resultado SELECT 1 vía SessionLocal:", row[0])
-    except Exception as e:
-        print("❌ Error al usar SessionLocal():")
-        print(repr(e))
-        return
-    finally:
-        try:
-            db.close()
-        except Exception:
-            pass
-
-    print("✅ Conexión a la base de datos OK.")
-
-
-if __name__ == "__main__":
-    test_connection()
+#app/test.py
+def user_data():
+    return [{
+		"id": 1,
+		"email": "jlopez@empresa.com",
+		"full_name": "Juan López",
+		"rol": "gerente",
+		"phone_number": "3001111111",
+		"is_active": True,
+		"username": "jlopez",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 2,
+		"email": "mgarcia@empresa.com",
+		"full_name": "Marta García",
+		"rol": "gerente",
+		"phone_number": "3002222222",
+		"is_active": True,
+		"username": "mgarcia",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 3,
+		"email": "arodriguez@empresa.com",
+		"full_name": "Ana Rodríguez",
+		"rol": "gerente",
+		"phone_number": "3003333333",
+		"is_active": True,
+		"username": "arodriguez",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 4,
+		"email": "pbernal@empresa.com",
+		"full_name": "Pablo Bernal",
+		"rol": "gerente",
+		"phone_number": "3004444444",
+		"is_active": True,
+		"username": "pbernal",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 5,
+		"email": "cruiz@empresa.com",
+		"full_name": "Camilo Ruiz",
+		"rol": "gerente",
+		"phone_number": "3005555555",
+		"is_active": True,
+		"username": "cruiz",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 6,
+		"email": "mlopera@empresa.com",
+		"full_name": "María Lopera",
+		"rol": "gerente",
+		"phone_number": "3006666666",
+		"is_active": True,
+		"username": "mlopera",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 7,
+		"email": "jrendon@empresa.com",
+		"full_name": "Julio Rendón",
+		"rol": "gerente",
+		"phone_number": "3007777777",
+		"is_active": True,
+		"username": "jrendon",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 8,
+		"email": "glopera@empresa.com",
+		"full_name": "Gloria Lopera",
+		"rol": "gerente",
+		"phone_number": "3008888888",
+		"is_active": True,
+		"username": "glopera",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 9,
+		"email": "fgomez@empresa.com",
+		"full_name": "Felipe Gómez",
+		"rol": "gerente",
+		"phone_number": "3009999999",
+		"is_active": True,
+		"username": "fgomez",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	},
+	{
+		"id": 10,
+		"email": "acastro@empresa.com",
+		"full_name": "Andrea Castro",
+		"rol": "empleado",
+		"phone_number": "3010000000",
+		"is_active": True,
+		"username": "acastro",
+		"password_hash": "hash",
+		"create_at": "2025-12-07 06:48:46.639209",
+		"update_at": "2025-12-07 06:48:46.639209",
+		"role_id": 1
+	}
+    ]
