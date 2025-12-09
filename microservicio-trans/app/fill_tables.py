@@ -1,10 +1,10 @@
 from datetime import datetime
-from db.session import Base, SessionLocal, engine
-from models.product_type import ProductTypes
-from models.suppliers import Suppliers
-from models.users import Users
-from models.risk_policies import RiskPolicies
-from models.transactions import (
+from app.db.session import Base, SessionLocal, engine
+from app.models.product_type import ProductTypes
+from app.models.suppliers import Suppliers
+from app.models.users import Users
+from app.models.risk_policies import RiskPolicies
+from app.models.transactions import (
     Transactions,
     VerificationStatus,
     MFAStatus,

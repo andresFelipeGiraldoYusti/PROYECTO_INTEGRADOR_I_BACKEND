@@ -1,58 +1,70 @@
 # app/services/risk_engine.py
 from sqlalchemy.orm import Session
-from models.transactions import Transactions
-from models.risk_policies import RiskPolicies
-from models.suppliers import Suppliers  # por si luego quieres usar más criterios
 
+from app.models.transactions import Transactions
+from app.models.risk_policies import RiskPolicies
+from app.models.suppliers import Suppliers
+from app.services.external_user_service import get_user_by_id
 
-def get_applicable_policy(db: Session, tx: Transactions) -> RiskPolicies | None:
-    """
-    Busca las políticas activas que aplican para:
-      - ese proveedor
-      - ese tipo de producto
-    y se queda con la política cuyo 'amount' sea el mayor umbral
-    que no supera el monto de la transacción.
-    """
-
-    policies = (
+def get_policies_for_tx(db: Session, tx: Transactions) -> list[RiskPolicies]:
+    user = get_user_by_id(tx.user_id)
+    user_rol = user["rol"] if user else None
+    return (
         db.query(RiskPolicies)
         .filter(
             RiskPolicies.is_active == True,
             RiskPolicies.supplier_id == tx.supplier_id,
+            RiskPolicies.rol == user_rol,
             RiskPolicies.product_type_id == tx.product_type_id,
         )
         .order_by(RiskPolicies.amount.asc())
         .all()
     )
 
-    applicable = None
-    for p in policies:
-        if tx.amount >= p.amount:
-            applicable = p  # siempre termina con la de mayor amount <= tx.amount
 
-    return applicable
+def choose_policy_by_range(policies: list[RiskPolicies], amount: int) -> RiskPolicies | None:
+    if not policies:
+        return None
+
+    n = len(policies)
+
+    for i, p in enumerate(policies):
+        lower = p.amount
+        upper = policies[i + 1].amount if i + 1 < n else None
+
+        # Si amount es menor o igual a la política actual → usar esa
+        if amount <= lower:
+            return p
+
+        # amount entre lower y upper
+        if upper is not None and lower < amount <= upper:
+            return p
+
+        # amount mayor que la última política → aplicar la última
+        if upper is None and amount > lower:
+            return p
+
+    return None
 
 
 def should_require_mfa(db: Session, tx: Transactions) -> bool:
-    # 1) Intentar aplicar políticas de riesgo configuradas por el admin
-    policy = get_applicable_policy(db, tx)
+    """
+    Aplica las políticas de riesgo para decidir si la transacción requiere MFA.
+    """
+
+    policies = get_policies_for_tx(db, tx)
+    policy = choose_policy_by_range(policies, tx.amount)
 
     if policy:
         action = (policy.mfa_action or "").upper()
 
-        if action == "ALWAYS_MFA":
-            return True          # siempre MFA
-        if action == "REQUIRE_MFA":
-            return True          # requiere MFA a partir de ese umbral
-        if action == "NEVER_MFA":
-            return False         # nunca MFA (por ejemplo, proveedores ultra confiables)
-        if action == "SKIP_MFA":
-            return False         # se omite MFA en ese rango
+        if action in ("MFA"):
+            return "REQUIRE_MFA"
+        if action in ("SKIP_MFA"):
+            return "NOT_REQUIRED"
 
-        # Acción desconocida → default seguro
-        return True
+        # Si la acción es desconocida, por seguridad, exigir MFA
+        return "REQUIRE_MFA"
 
-    # 2) Si NO hay política configurada para ese proveedor + producto
-    #    decides un criterio por defecto.
-    #    Puedes ser estricto (True) o laxo (False).
-    return True  # por seguridad, si no hay reglas, pedimos MFA
+    # Si no hay políticas retornar que requiere MFA por defecto    
+    return "REJECTED"

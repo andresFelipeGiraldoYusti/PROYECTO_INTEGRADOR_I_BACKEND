@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db.session import get_db
+from app.db.session import get_db
 
-from schemas.risk_policy_schema import RiskPolicyCreate, RiskPolicyResponse
-from services.risk_policy_service import (
+from app.schemas.risk_policy_schema import RiskPolicyCreate, RiskPolicyResponse
+from app.services.risk_policy_service import (
     create_risk_policy, get_risk_policy, search_risk_policies,
     update_risk_policy, delete_risk_policy,
 )

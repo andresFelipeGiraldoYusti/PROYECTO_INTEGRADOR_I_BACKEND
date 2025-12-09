@@ -3,7 +3,7 @@
 # app/models/risk_policy.py
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime
-from db.session import Base
+from app.db.session import Base
 
 class RiskPolicies(Base):
     __tablename__ = "risk_policies"

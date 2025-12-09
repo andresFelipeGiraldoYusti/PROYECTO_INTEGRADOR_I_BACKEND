@@ -1,7 +1,7 @@
 # app/db/session.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from core.config import settings
+from app.core.config import settings
 
 # Motor y sesión
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, pool_pre_ping=True, pool_recycle=1800, echo=True)

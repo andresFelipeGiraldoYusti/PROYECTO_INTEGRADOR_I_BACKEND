@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from db.session import get_db
+from app.db.session import get_db
 
-from schemas.transaction_query_schema import TransactionQueryResponse
-from services.transaction_query_service import search_transactions
+from app.schemas.transaction_query_schema import TransactionQueryResponse
+from app.services.transaction_query_service import search_transactions
 
 router = APIRouter(prefix="/transactions-query", tags=["transactions-query"])
 

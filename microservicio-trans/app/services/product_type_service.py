@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 
-from models.product_type import ProductTypes
-from schemas.product_type_schema import ProductTypeCreate
+from app.models.product_type import ProductTypes
+from app.schemas.product_type_schema import ProductTypeCreate
 
 
 def create_product_type(db: Session, data: ProductTypeCreate) -> ProductTypes:

@@ -7,6 +7,19 @@ from app.schemas.users_schema import UsersCreate
 from app.services.user_service import UsersService
 from app.auth.login import authenticate
 from app.auth.dependencies import require_admin
+from app.auth.login import decode_access_token
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+from pydantic import BaseModel
+
+class TokenValidationResponse(BaseModel):
+    is_valid: bool
+    user_id: int
+    email: str
+    rol: str
+    exp: int
+    access_token: str | None = None
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -36,3 +49,17 @@ def register_user(user: UsersCreate,
         return db_user
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/validate")
+def validate_jwt(
+    token: str = Depends(oauth2_scheme)
+):
+    payload = decode_access_token(token)
+
+    if not payload:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired JWT"
+        )
+
+    return payload

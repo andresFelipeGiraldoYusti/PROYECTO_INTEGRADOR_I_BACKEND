@@ -1,7 +1,7 @@
 # app/models/supplier.py
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
-from db.session import Base
+from app.db.session import Base
 
 class Suppliers(Base):
     __tablename__ = "suppliers"
