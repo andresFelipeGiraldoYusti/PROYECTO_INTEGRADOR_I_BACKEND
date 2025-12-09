@@ -20,7 +20,8 @@ app = FastAPI(
     title="Backend Profesional con FastAPI",
     description="API REST para manejo de datos en base de datos",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    root_path="/auth"
 )
 
 # ======== CORS ========
@@ -36,7 +37,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# ========================
 
 # Incluir todos los routers
 app.include_router(router)
@@ -45,4 +45,4 @@ app.include_router(router)
 Base.metadata.create_all(bind=engine)
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

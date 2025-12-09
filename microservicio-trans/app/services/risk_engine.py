@@ -23,27 +23,20 @@ def get_policies_for_tx(db: Session, tx: Transactions) -> list[RiskPolicies]:
 
 
 def choose_policy_by_range(policies: list[RiskPolicies], amount: int) -> RiskPolicies | None:
+    """
+    Asume que `RiskPolicies.amount` es el límite superior (upper bound) de cada política.
+    Las políticas vienen ordenadas ascendentemente por `amount`. 
+    - Si amount <= límite de una política, se aplica esa política.
+    - Si amount es mayor que el máximo límite disponible, NO se aplica ninguna (se devuelve None -> rechazo).
+    """
     if not policies:
         return None
 
-    n = len(policies)
-
-    for i, p in enumerate(policies):
-        lower = p.amount
-        upper = policies[i + 1].amount if i + 1 < n else None
-
-        # Si amount es menor o igual a la política actual → usar esa
-        if amount <= lower:
+    for p in policies:
+        if amount <= p.amount:
             return p
 
-        # amount entre lower y upper
-        if upper is not None and lower < amount <= upper:
-            return p
-
-        # amount mayor que la última política → aplicar la última
-        if upper is None and amount > lower:
-            return p
-
+    # Si el monto es mayor que el mayor límite definido, no hay política aplicable
     return None
 
 
