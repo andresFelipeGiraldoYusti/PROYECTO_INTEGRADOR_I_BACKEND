@@ -100,4 +100,7 @@ def create_and_verify_transaction(db: Session, data: TransactionVerificationRequ
     else:
         estado = "Verificación exitosa"
 
+    
+    
+
     return tx, estado, detalles
