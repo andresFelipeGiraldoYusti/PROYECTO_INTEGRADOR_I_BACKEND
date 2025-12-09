@@ -69,17 +69,21 @@ def create_and_verify_transaction(db: Session, data: TransactionVerificationRequ
             # 5) Motor de riesgo decide si requiere MFA
             requiere_mfa = should_require_mfa(db, tx)
 
-            if requiere_mfa:
+            if requiere_mfa == "REQUIRE_MFA":
                 tx.verification_status = VerificationStatus.NEEDS_ADDITIONAL_CHECKS
                 tx.mfa_status = MFAStatus.PENDING
 
                 alertas_totales.append(
-                    "La transacción requiere verificación MFA según políticas de riesgo."
+                    "La transacción requiere verificación MFA según políticas de riesgo. "
                 )
-                
-            else:
+            
+            elif requiere_mfa == "NOT_REQUIRED":
                 tx.verification_status = VerificationStatus.SUCCESS
                 tx.mfa_status = MFAStatus.NOT_REQUIRED
+                
+            elif requiere_mfa == "REJECTED":
+                tx.verification_status = VerificationStatus.FAILED
+                tx.mfa_status = MFAStatus.REJECTED
 
     # 6) Construir detalle final (errores + alertas) y guardar en la transacción
     detalles = errores_totales + alertas_totales
@@ -90,10 +94,10 @@ def create_and_verify_transaction(db: Session, data: TransactionVerificationRequ
 
     # 7) Texto legible para el estado
     if tx.verification_status == VerificationStatus.FAILED:
-        estado = "verificación fallida"
+        estado = "Verificación fallida"
     elif tx.mfa_status == MFAStatus.PENDING:
-        estado = "requiere verificaciones adicionales"
+        estado = "Requiere verificaciones adicionales"
     else:
-        estado = "verificación exitosa"
+        estado = "Verificación exitosa"
 
     return tx, estado, detalles

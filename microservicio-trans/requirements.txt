@@ -13,3 +13,4 @@ pillow
 PyJWT
 psycopg2-binary
 argon2-cffi
+requests

@@ -8,7 +8,7 @@ from app.services.external_user_service import get_user_by_id
 
 def get_policies_for_tx(db: Session, tx: Transactions) -> list[RiskPolicies]:
     user = get_user_by_id(tx.user_id)
-    user_rol = user.rol if user else None
+    user_rol = user["rol"] if user else None
     return (
         db.query(RiskPolicies)
         .filter(
@@ -59,24 +59,12 @@ def should_require_mfa(db: Session, tx: Transactions) -> bool:
         action = (policy.mfa_action or "").upper()
 
         if action in ("MFA"):
-            return True
+            return "REQUIRE_MFA"
         if action in ("SKIP_MFA"):
-            return False
+            return "NOT_REQUIRED"
 
         # Si la acción es desconocida, por seguridad, exigir MFA
-        return True
+        return "REQUIRE_MFA"
 
-    # Si no hay políticas específicas, se puede evaluar por categoría de riesgo del proveedor
-    supplier = db.query(Suppliers).filter(Suppliers.id == tx.supplier_id).first()
-
-    if not supplier:
-        return True
-
-    category = (getattr(supplier, "risk_category", "MEDIUM") or "MEDIUM").upper()
-
-    if category == "HIGH":
-        return True
-    if category in ("MEDIUM", "LOW"):
-        return False
-
-    return True
+    # Si no hay políticas retornar que requiere MFA por defecto    
+    return "REJECTED"

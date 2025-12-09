@@ -1,11 +1,20 @@
 from typing import Optional, List
+import requests
 from app.test import user_data
 
+USER_SERVICE_URL = "http://microservicio-auth:8001"
+
 def get_user_by_id(user_id: int) -> Optional[dict]:
-    for u in user_data():
-        if u["id"] == user_id:
-            return u
-    return None
+    try:
+        response = requests.get(f"{USER_SERVICE_URL}/users/{user_id}", timeout=5)
+        
+        if response.status_code == 200:
+            return response.json()
+        
+        return None
+    
+    except requests.RequestException:
+        return None
 
 
 def get_user_by_username(username: str) -> Optional[dict]:
