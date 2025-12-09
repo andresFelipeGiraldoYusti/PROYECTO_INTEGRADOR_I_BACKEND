@@ -10,7 +10,7 @@ from app.routes.transaction_query_routes import router as transaction_query_rout
 
 from app.db.session import Base, engine
 
-app = FastAPI(title="Transaction Verification Service")
+app = FastAPI(title="Transaction Verification Service", root_path="/auth")
 
 # Solo el router de verification lleva prefix aquí:
 app.include_router(verification_router, prefix="/verification", tags=["verification"])

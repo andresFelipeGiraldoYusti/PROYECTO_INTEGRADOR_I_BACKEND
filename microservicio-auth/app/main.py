@@ -20,7 +20,8 @@ app = FastAPI(
     title="Backend Profesional con FastAPI",
     description="API REST para manejo de datos en base de datos",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    root_path="/auth"
 )
 
 # ======== CORS ========

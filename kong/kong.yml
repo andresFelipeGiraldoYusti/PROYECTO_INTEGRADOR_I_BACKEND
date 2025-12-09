@@ -8,7 +8,17 @@ services:
       - name: auth-route
         paths:
           - /auth
-        strip_path: false
+        strip_path: true
+
+  - name: trans-service
+    url: http://microservicio-trans:8003
+    routes:
+      - name: trans-route
+        paths:
+          - /trans
+          - /transactions
+          - /verification
+        strip_path: true
 
 plugins:
   - name: cors
