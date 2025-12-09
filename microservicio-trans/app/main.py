@@ -10,7 +10,7 @@ from app.routes.transaction_query_routes import router as transaction_query_rout
 
 from app.db.session import Base, engine
 
-app = FastAPI(title="Transaction Verification Service", root_path="/auth")
+app = FastAPI(title="Transaction Verification Service", root_path="/trans")
 
 # Solo el router de verification lleva prefix aquí:
 app.include_router(verification_router, prefix="/verification", tags=["verification"])
@@ -23,7 +23,7 @@ app.include_router(transaction_query_router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8003, reload=True)
 
 
 @app.on_event("startup")
