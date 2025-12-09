@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.session import get_db
+from security.jwt_dependency import require_user
 
 from schemas.supplier_schema import SupplierCreate, SupplierResponse
 from services.supplier_service import (
@@ -8,7 +9,7 @@ from services.supplier_service import (
     update_supplier, delete_supplier,
 )
 
-router = APIRouter(prefix="/suppliers", tags=["suppliers"])
+router = APIRouter(dependencies=[Depends(require_user)], prefix="/suppliers", tags=["suppliers"])
 
 
 @router.post("/", response_model=SupplierResponse)

@@ -7,6 +7,7 @@ from routes.supplier_routes import router as supplier_router
 from routes.product_type_routes import router as product_type_router
 from routes.risk_policy_routes import router as risk_policy_router
 from routes.transaction_query_routes import router as transaction_query_router
+from routes.mfa_routes import router as mfa_router
 
 from db.session import Base, engine
 import models  # noqa: F401
@@ -21,6 +22,7 @@ app.include_router(supplier_router)
 app.include_router(product_type_router)
 app.include_router(risk_policy_router)
 app.include_router(transaction_query_router)
+app.include_router(mfa_router)
 
 if __name__ == "__main__":
     import uvicorn

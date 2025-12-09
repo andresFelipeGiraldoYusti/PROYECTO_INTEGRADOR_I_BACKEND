@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db.session import get_db
+from security.jwt_dependency import require_user
 
 from schemas.risk_policy_schema import RiskPolicyCreate, RiskPolicyResponse
 from services.risk_policy_service import (
@@ -8,7 +9,7 @@ from services.risk_policy_service import (
     update_risk_policy, delete_risk_policy,
 )
 
-router = APIRouter(prefix="/risk-policies", tags=["risk-policies"])
+router = APIRouter(dependencies=[Depends(require_user)], prefix="/risk-policies", tags=["risk-policies"])
 
 
 @router.post("/", response_model=RiskPolicyResponse)

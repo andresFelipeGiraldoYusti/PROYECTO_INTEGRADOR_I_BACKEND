@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from db.session import get_db
+from security.jwt_dependency import require_user
 
 from schemas.transaction_query_schema import TransactionQueryResponse
 from services.transaction_query_service import search_transactions
 
-router = APIRouter(prefix="/transactions-query", tags=["transactions-query"])
+router = APIRouter(dependencies=[Depends(require_user)], prefix="/transactions-query", tags=["transactions-query"])
 
 
 @router.get("/", response_model=list[TransactionQueryResponse])

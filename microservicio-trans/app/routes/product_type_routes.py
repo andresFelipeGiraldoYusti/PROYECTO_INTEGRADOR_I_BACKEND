@@ -1,6 +1,7 @@
 # app/routes/product_type_routes.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from security.jwt_dependency import require_user
 
 from db.session import get_db
 from schemas.product_type_schema import ProductTypeCreate, ProductTypeResponse
@@ -13,7 +14,7 @@ from services.product_type_service import (
 )
 
 # 👇 ESTA variable *debe* existir a nivel global
-router = APIRouter(prefix="/product-types", tags=["product-types"])
+router = APIRouter(dependencies=[Depends(require_user)], prefix="/product-types", tags=["product-types"])
 
 
 @router.post("/", response_model=ProductTypeResponse)
