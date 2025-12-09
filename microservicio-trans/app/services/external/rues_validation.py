@@ -14,20 +14,18 @@ def get_rues_status(nit: str) -> bool:
             data = res.read()
             json_data = json.loads(data.decode("utf-8"))
             
-            bool_active= False
-            
+            bool_active= False            
             if json_data == []:
-                return ["NO EXISTE", bool_active]
+                return["NO EXISTE", bool_active]
         
             else:
                 for item in json_data:
                     if item["estado_matricula"] == "ACTIVA":
                         bool_active = True
-                        break            
-                    return ["EXISTE", bool_active]
+                        break 
+                    
+                              
+                return ["EXISTE", bool_active]
 
     except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
-    
-t= get_rues_status("999999998")
-print(t)
