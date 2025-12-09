@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 
-from app.auth.dependencies import require_admin
+from app.auth.dependencies import require_admin, get_current_user
 from app.schemas.users_schema import UsersRead, UsersUpdate
 from app.services.user_service import UsersService
 from app.auth.login import authenticate
@@ -15,6 +15,10 @@ def read_user(user_id: int, db: Session = Depends(get_db)) -> UsersRead:
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@router.post("/me", response_model=UsersRead)
+def read_current_user(current_user = Depends(get_current_user)) -> UsersRead:
+    return current_user
 
 @router.post("/get_all_users")
 def create_user(db: Session = Depends(get_db), admin_user = Depends(require_admin)):
